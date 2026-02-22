@@ -2,21 +2,41 @@
 <head>
    <meta charset="UTF-8">
    <link rel="shortcut icon" type="image/x-icon" href="index.ico" />
-   <meta name="viewport" content="width=device-width,minimal-ui,initial-scale=1,maximum-scale=10">
-   <meta name="description" content="WebApp">
-   <meta name="theme-color" content="blue">
+   <meta name="viewport" content="width=device-width, initial-scale=1">   <meta name="description" content="WebApp">
+   <meta name="theme-color" content="brown">
    <meta name="mobile-web-app-capable" content="yes">
    <title>SingingBowl</title>
    <link rel="stylesheet" href="w3.css" /><head>
+   <script src="data.js"></script>
+   <script src="app.js"></script>
    <script src="audio.js"></script>
+   <style>
+      body  { background-image: url('background2.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat; }
+      .tran { background-color:rgba(255,255,255,0.4); }
+      .freq { width: 7em; }
+      .gain { width: 7em; }
+      .time { width: 7em; }
+   </style>
 </head>
-<body>
+
+<body onload="appUpdateView();">
 <h1 class="w3-margin">Singing Bowl</h1>
-<div class="w3-card-4 w3-blue w3-margin w3-padding w3-round-large">
-   <button class="w3-button w3-white w3-border w3-border-black w3-round-large" onclick="audioInit( 0.8 );">AudioInit 0.8</button>
-   <button class="w3-button w3-white w3-border w3-border-black w3-round-large" onclick="audioInit( 1.0 );">AudioInit 1.0</button>
-   <button class="w3-button w3-white w3-border w3-border-black w3-round-large" onclick="audioInit( 1.2 );">AudioInit 1.2</button>
+
+<div class="w3-card-4 w3-margin w3-padding w3-round-large tran">
+   <table class="w3-table" style="width:fit-content !important;">
+      <tr>
+         <td><button class="w3-col w3-button w3-white w3-border w3-border-black w3-round-large" style="width:10em;"onclick="audioInit();">Tap the bowl</button></td>
+         <td>| Master Gain"</td>
+         <td><input  class="w3-col gain w3-input w3-border w3-border-black w3-round-large" type="number" value="" id="master" onchange="audioSetGain( -1, -1, this.value );"></td>
+      </tr>
+   </table>  
 </div>
+
+<div class="w3-card-4 w3-margin w3-padding w3-round-large tran">
+   <button class="w3-button w3-white w3-border w3-border-black w3-round-large" onclick="collapse(this);">Sine Wave & Gains Settings</button>
+   <div class="w3-flex w3-margin" style="gap:8px;flex-wrap: wrap;display:none;" id="groups"></div>
+</div>
+
 
 </body>
 </html>

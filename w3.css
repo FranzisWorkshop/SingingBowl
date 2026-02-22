@@ -1,4 +1,5 @@
 /* W3.CSS 5.02 March 31 2025 by Jan Egil and Borge Refsnes */
+/* changed by Franz Lorenz */
 html{box-sizing:border-box}*,*:before,*:after{box-sizing:inherit}
 /* Extract from normalize.css by Nicolas Gallagher and Jonathan Neal git.io/normalize */
 html{-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}body{margin:0}
@@ -28,13 +29,13 @@ html,body{font-family:Verdana,sans-serif;font-size:15px;line-height:1.5}html{ove
 h1{font-size:36px}h2{font-size:30px}h3{font-size:24px}h4{font-size:20px}h5{font-size:18px}h6{font-size:16px}
 .w3-serif{font-family:serif}.w3-sans-serif{font-family:sans-serif}.w3-cursive{font-family:cursive}.w3-monospace{font-family:monospace}
 h1,h2,h3,h4,h5,h6{font-family:"Segoe UI",Arial,sans-serif;font-weight:400;margin:10px 0}.w3-wide{letter-spacing:4px}
-hr{border:0;border-top:1px solid #eee;margin:20px 0}
+hr{border:0;border-top:1px solid #eee;margin:5px 5px}
 .w3-image{max-width:100%;height:auto}img{vertical-align:middle}a{color:inherit}
 .w3-table,.w3-table-all{border-collapse:collapse;border-spacing:0;width:100%;display:table}.w3-table-all{border:1px solid #ccc}
 .w3-bordered tr,.w3-table-all tr{border-bottom:1px solid #ddd}.w3-striped tbody tr:nth-child(even){background-color:#f1f1f1}
 .w3-table-all tr:nth-child(odd){background-color:#fff}.w3-table-all tr:nth-child(even){background-color:#f1f1f1}
 .w3-hoverable tbody tr:hover,.w3-ul.w3-hoverable li:hover{background-color:#ccc}.w3-centered tr th,.w3-centered tr td{text-align:center}
-.w3-table td,.w3-table th,.w3-table-all td,.w3-table-all th{padding:8px 8px;display:table-cell;text-align:left;vertical-align:top}
+.w3-table td,.w3-table th,.w3-table-all td,.w3-table-all th{padding:3px 3px;display:table-cell;text-align:left;vertical-align:middle;}
 .w3-table th:first-child,.w3-table td:first-child,.w3-table-all th:first-child,.w3-table-all td:first-child{padding-left:16px}
 .w3-btn,.w3-button{border:none;display:inline-block;padding:8px 16px;vertical-align:middle;overflow:hidden;text-decoration:none;color:inherit;background-color:inherit;text-align:center;cursor:pointer;white-space:nowrap}
 .w3-btn:hover{box-shadow:0 8px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19)}
@@ -250,3 +251,26 @@ hr{border:0;border-top:1px solid #eee;margin:20px 0}
 .w3-border-pale-red,.w3-hover-border-pale-red:hover{border-color:#ffe7e7!important}.w3-border-pale-green,.w3-hover-border-pale-green:hover{border-color:#e7ffe7!important}
 .w3-border-pale-yellow,.w3-hover-border-pale-yellow:hover{border-color:#ffffcc!important}.w3-border-pale-blue,.w3-hover-border-pale-blue:hover{border-color:#e7ffff!important}
 
+
+.w3-theme-l5 {color:#000 !important; background-color:#f8f4f3 !important}
+.w3-theme-l4 {color:#000 !important; background-color:#e7dcd7 !important}
+.w3-theme-l3 {color:#000 !important; background-color:#d0b8b0 !important}
+.w3-theme-l2 {color:#fff !important; background-color:#b89588 !important}
+.w3-theme-l1 {color:#fff !important; background-color:#a07261 !important}
+.w3-theme-d1 {color:#fff !important; background-color:#6d4d41 !important}
+.w3-theme-d2 {color:#fff !important; background-color:#61443a !important}
+.w3-theme-d3 {color:#fff !important; background-color:#553c33 !important}
+.w3-theme-d4 {color:#fff !important; background-color:#49332c !important}
+.w3-theme-d5 {color:#fff !important; background-color:#3d2b24 !important}
+
+.w3-theme-light {color:#000 !important; background-color:#f8f4f3 !important}
+.w3-theme-dark {color:#fff !important; background-color:#3d2b24 !important}
+.w3-theme-action {color:#fff !important; background-color:#3d2b24 !important}
+
+.w3-theme {color:#fff !important; background-color:#795548 !important}
+.w3-text-theme {color:#795548 !important}
+.w3-border-theme {border-color:#795548 !important}
+
+.w3-hover-theme:hover {color:#fff !important; background-color:#795548 !important}
+.w3-hover-text-theme:hover {color:#795548 !important}
+.w3-hover-border-theme:hover {border-color:#795548 !important}
