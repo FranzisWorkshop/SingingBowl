@@ -80,5 +80,4 @@ function collapse( El )
       content.style.display = "";
    else
       content.style.display = "none";
-}0
-
+}
