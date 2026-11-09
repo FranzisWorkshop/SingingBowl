@@ -1,42 +1,276 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
    <meta charset="UTF-8">
-   <link rel="shortcut icon" type="image/x-icon" href="index.ico" />
-   <meta name="viewport" content="width=device-width, initial-scale=1">   <meta name="description" content="WebApp">
-   <meta name="theme-color" content="brown">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <meta name="description" content="A generative singing bowl built with the Web Audio API.">
+   <meta name="theme-color" content="#1b110a">
    <meta name="mobile-web-app-capable" content="yes">
-   <title>SingingBowl</title>
-   <link rel="stylesheet" href="w3.css" /><head>
+   <meta name="apple-mobile-web-app-capable" content="yes">
+   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+   <meta name="apple-mobile-web-app-title" content="Singing Bowl">
+   <title>Singing Bowl</title>
+   <link rel="manifest" href="manifest.json" />
+   <link rel="icon" href="icons/icon-192.png" type="image/png" />
+   <link rel="apple-touch-icon" href="icons/icon-180.png" />
+   <link rel="stylesheet" href="style.css" />
    <script src="data.js"></script>
    <script src="app.js"></script>
    <script src="audio.js"></script>
-   <style>
-      body  { background-image: url('background2.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat; }
-      .tran { background-color:rgba(255,255,255,0.4); }
-      .freq { width: 7em; }
-      .gain { width: 7em; }
-      .time { width: 7em; }
-   </style>
 </head>
 
 <body onload="appUpdateView();">
-<h1 class="w3-margin">Singing Bowl</h1>
 
-<div class="w3-card-4 w3-margin w3-padding w3-round-large tran">
-   <table class="w3-table" style="width:fit-content !important;">
-      <tr>
-         <td><button class="w3-col w3-button w3-white w3-border w3-border-black w3-round-large" style="width:10em;"onclick="audioInit();">Tap the bowl</button></td>
-         <td>| Master Gain"</td>
-         <td><input  class="w3-col gain w3-input w3-border w3-border-black w3-round-large" type="number" value="" id="master" onchange="audioSetGain( -1, -1, this.value );"></td>
-      </tr>
-   </table>  
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+   <symbol id="bowl-icon" viewBox="0 0 64 64">
+      <g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+         <ellipse cx="32" cy="26" rx="23" ry="6.5" />
+         <path d="M9 26c0 13.5 10.3 24 23 24s23-10.5 23-24" />
+         <path d="M23 50.5h18" />
+         <path d="M39 13.5l6-6" opacity=".65" />
+         <circle cx="47.5" cy="8.5" r="3.2" opacity=".65" />
+      </g>
+   </symbol>
+</svg>
+
+<div class="page">
+   <div class="app">
+
+      <header class="topbar">
+         <a class="brand" href="#" aria-label="Singing Bowl home">
+            <svg aria-hidden="true"><use href="#bowl-icon" /></svg>
+            <span>Singing Bowl</span>
+         </a>
+         <div class="topbar-actions">
+            <button class="topbar-btn" type="button" onclick="appOpenDocs();" aria-haspopup="dialog">
+               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                    stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v18H6.5A2.5 2.5 0 0 1 4 18.5z" />
+                  <path d="M4 18.5A2.5 2.5 0 0 1 6.5 16H20" />
+                  <path d="M8 7h8" />
+                  <path d="M8 11h6" />
+               </svg>
+               <span>Docs</span>
+            </button>
+            <button id="installBtn" class="topbar-btn" type="button" onclick="appInstall();" hidden>
+               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                    stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M12 3v11" />
+                  <path d="M7.5 10.5 12 15l4.5-4.5" />
+                  <path d="M4 20h16" />
+               </svg>
+               <span>Install</span>
+            </button>
+            <span class="topbar-note">Web Audio · additive synthesis</span>
+         </div>
+      </header>
+
+      <main>
+         <section class="hero panel">
+            <div class="hero-copy">
+               <h1>Singing<br /><span class="accent">Bowl</span></h1>
+               <ul class="chips" aria-label="Features">
+                  <li class="chip">Detuned sines</li>
+                  <li class="chip">Slow beating</li>
+                  <li class="chip">Live controls</li>
+               </ul>
+            </div>
+
+            <div class="strike-wrap">
+               <button id="strike" class="strike" type="button" onclick="appStrike();"
+                       aria-label="Strike the singing bowl">
+                  <svg aria-hidden="true"><use href="#bowl-icon" /></svg>
+                  <span class="strike-label">Strike</span>
+               </button>
+               <p class="hint">Tap to strike · strike again to retrigger</p>
+            </div>
+         </section>
+
+         <section class="panel master" aria-labelledby="masterHeading">
+            <div>
+               <p class="panel-label">Output</p>
+               <h2 id="masterHeading">Master volume</h2>
+            </div>
+            <div class="slider-unit">
+               <input type="range" id="masterRange" min="-40" max="0" step="0.5" value="-6"
+                      oninput="appSetMaster(this.value, this)"
+                      aria-label="Master volume in decibels" />
+               <div class="unit-input compact">
+                  <input type="number" id="master" step="0.5" value="-6"
+                         onchange="appSetMaster(this.value, this)"
+                         aria-label="Master volume in decibels" />
+                  <span class="unit">dB</span>
+               </div>
+            </div>
+         </section>
+
+         <section class="panel settings">
+            <button class="settings-toggle" type="button" onclick="collapse(this);"
+                    aria-expanded="false" aria-controls="groups">
+               <span>
+                  <span class="settings-kicker">Fine tuning</span>
+                  <span class="settings-title">Sine waves &amp; gains</span>
+               </span>
+               <span class="chevron" aria-hidden="true"></span>
+            </button>
+            <div class="settings-body" id="groups"></div>
+         </section>
+
+      </main>
+
+   </div>
 </div>
 
-<div class="w3-card-4 w3-margin w3-padding w3-round-large tran">
-   <button class="w3-button w3-white w3-border w3-border-black w3-round-large" onclick="collapse(this);">Sine Wave & Gains Settings</button>
-   <div class="w3-flex w3-margin" style="gap:8px;flex-wrap: wrap;display:none;" id="groups"></div>
-</div>
+<dialog id="docsDialog" class="docs-dialog" aria-labelledby="docsTitle">
+   <article class="docs">
+      <header class="docs-head">
+         <div>
+            <p class="docs-kicker">Singing Bowl</p>
+            <h2 class="docs-title" id="docsTitle">Documentation</h2>
+         </div>
+         <button class="docs-close" type="button" onclick="appCloseDocs();" aria-label="Close documentation">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                 stroke-linecap="round" aria-hidden="true">
+               <path d="M6 6l12 12M18 6 6 18" />
+            </svg>
+         </button>
+      </header>
 
+      <div class="docs-body">
+         <p class="docs-lead">
+            Singing Bowl is a small generative instrument that synthesises the sound of a
+            bronze bowl from slightly detuned sine partials. Strike it, listen to the
+            overtones bloom and shape the tone until it resonates with you.
+         </p>
+
+         <section class="docs-section">
+            <h3>Quick start</h3>
+            <ol>
+               <li>Press the round <strong>Strike</strong> button. The first strike also
+                   unlocks audio playback in the browser.</li>
+               <li>Set a comfortable level with <strong>Master volume</strong>.</li>
+               <li>Open <strong>Fine tuning</strong> to adjust partials, gains and decay times.</li>
+            </ol>
+         </section>
+
+         <section class="docs-section">
+            <h3>Controls</h3>
+            <dl class="docs-controls">
+               <dt>Strike</dt>
+               <dd>Plays one strike. Striking again retriggers the bowl and softly damps the
+                   previous sound.</dd>
+
+               <dt>Master volume</dt>
+               <dd>Output level from −40 to 0 dBFS. The slider and the number field stay in
+                   sync; edits take effect immediately.</dd>
+
+               <dt>Fine tuning</dt>
+               <dd>Opens the four partial groups. Every change inside is applied live
+                   and saved automatically.</dd>
+
+               <dt>Partial switch</dt>
+               <dd>Turns a single sine partial on or off. Disabled partials are dimmed and
+                   are skipped by the audio engine.</dd>
+
+               <dt>Frequency</dt>
+               <dd>Pitch of a partial in hertz. Values are applied to a running tone live.
+                   Slightly detuned neighbours create the characteristic slow beating.</dd>
+
+               <dt>Partial gain</dt>
+               <dd>Level of one partial from −60 to 0 dBFS.</dd>
+
+               <dt>Group gain</dt>
+               <dd>Level of all partials in a group from −60 to 0 dBFS.</dd>
+
+               <dt>Decay time</dt>
+               <dd>How long a group rings after a strike, from 0.5 to 12 seconds. Longer
+                   times suit the low fundamental groups; shorter times keep the upper
+                   partials clean.</dd>
+            </dl>
+         </section>
+
+         <section class="docs-section">
+            <h3>How the sound is made</h3>
+            <p>
+               The instrument uses additive synthesis with the Web Audio API. Every partial
+               is an oscillator with its own frequency, level and envelope. Small frequency
+               offsets between partials produce the slow amplitude beating typical of a
+               singing bowl.
+            </p>
+            <ul>
+               <li>A short filtered noise burst models the mallet contact.</li>
+               <li>An attack and decay envelope shapes every strike.</li>
+               <li>A limiter at the output prevents clipping when many partials add up.</li>
+               <li>All parameters are applied live to the running sound.</li>
+            </ul>
+         </section>
+
+         <section class="docs-section">
+            <h3>Saved settings</h3>
+            <p>
+               Master volume, partial frequencies, gains, switch states, group gains and
+               decay times are stored in your browser's local storage. They are restored
+               automatically the next time the app starts.
+            </p>
+            <p class="docs-note">
+               Settings never leave your device. Clearing this site's data in the browser
+               resets everything to the defaults.
+            </p>
+         </section>
+
+         <section class="docs-section">
+            <h3>Install and offline use</h3>
+            <p>
+               Singing Bowl is a Progressive Web App. When served from
+               <code>http://localhost</code> or over HTTPS, Chrome and Edge offer an
+               <strong>Install</strong> button in the header. On iOS Safari, use
+               <em>Share → Add to Home Screen</em>.
+            </p>
+            <p>
+               A service worker caches the app shell after the first visit, so the instrument
+               keeps working offline. New versions are picked up automatically when you are
+               online again.
+            </p>
+         </section>
+
+         <section class="docs-section">
+            <h3>Tips</h3>
+            <ul>
+               <li>Start with the default tuning and lower the upper partial gains for a
+                   softer, more meditative tone.</li>
+               <li>Long decay times on the low groups and short times on the high groups
+                   keep the sound open and clear.</li>
+               <li>Very small frequency differences (a fraction of a hertz) create the
+                   strongest beating.</li>
+               <li>Retrigger the bowl while it is still ringing to hear the damping
+                   transition.</li>
+            </ul>
+         </section>
+
+         <section class="docs-section">
+            <h3>Troubleshooting</h3>
+            <dl class="docs-controls">
+               <dt>No sound</dt>
+               <dd>Strike once to unlock audio, check the master volume and make sure the
+                   system output is not muted.</dd>
+
+               <dt>Install button is missing</dt>
+               <dd>The app must run on <code>localhost</code> or HTTPS. Some browsers do not
+                   offer installation on desktop; use the browser menu instead.</dd>
+
+               <dt>Settings are not restored</dt>
+               <dd>Private windows and blocked site storage can prevent saving. Allow local
+                   storage for this site or leave private browsing.</dd>
+
+               <dt>The sound is distorted</dt>
+               <dd>Lower the master volume or reduce the gains of the loudest partials. The
+                   built-in limiter protects the output, but very high levels still sound
+                   compressed.</dd>
+            </dl>
+         </section>
+      </div>
+   </article>
+</dialog>
 
 </body>
 </html>
